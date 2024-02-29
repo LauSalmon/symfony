@@ -33,7 +33,8 @@ class AppFixtures extends Fixture
                 $user->setNom($faker->firstName())
                     ->setPrenom($faker->lastName())
                     ->setEmail($faker->freeEmail())
-                    ->setPassword($faker->password());
+                    ->setPassword($faker->password())
+                    ->setUrlImg($faker->imageUrl(640, 480, 'humain', true));
 
                 //On fais persister l'utilisateur
                 $manager->persist($user);
@@ -46,6 +47,7 @@ class AppFixtures extends Fixture
                 $article= new Article();
                 $article->setTitre($faker->sentence(3))
                         ->setContenu($faker->paragraph())
+                        ->setUrlImg($faker->imageUrl(640, 480, 'Article', true))
                         ->setDateCreation($faker->dateTime())
                         ->setUtilisateur($users[$faker->numberBetween(0, 49)]);
 
