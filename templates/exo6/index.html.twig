@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exo 6{% endblock %}
+
+{% block body %}
+{#Verifier que les nbr sont bien des nombre #}
+    {% if nbr1 matches '/^[-+]?[0-9]*\\.?[0-9]+$/' and nbr2 matches '/^[-+]?[0-9]*\\.?[0-9]+$/' %}
+        {% if operateur == "add" %} 
+            <p>Le resultat de l'operation : <strong>{{ operateur }}</strong> avec les nombres 
+                <strong>{{ nbr1 }}</strong> et <strong>{{ nbr2 }}</strong> est égal à : </p>
+            <p><strong>{{ nbr1 + nbr2  }}</strong></p>
+        {% elseif operateur == "sub" %} 
+            <p>Le resultat de l'operation : <strong>{{ operateur }}</strong> avec les nombres 
+                <strong>{{ nbr1 }}</strong> et <strong>{{ nbr2 }}</strong> est égal à : </p>
+            <p><strong>{{ nbr1 - nbr2  }}</strong></p>
+        {% elseif operateur == "multi" %} 
+            <p>Le resultat de l'operation : <strong>{{ operateur }}</strong> avec les nombres 
+                <strong>{{ nbr1 }}</strong> et <strong>{{ nbr2 }}</strong> est égal à : </p>
+            <p><strong>{{ nbr1 * nbr2  }}</strong></p>
+        {% elseif operateur == "div" %} 
+                {% if nbr2 == 0 %}
+                <p>La division par zéro est impossible.</p>
+                {% else %}
+                <p>Le resultat de l'operation : <strong>{{ operateur }}</strong> avec les nombres 
+                    <strong>{{ nbr1 }}</strong> et <strong>{{ nbr2 }}</strong> est égal à : </p>
+                <p><strong>{{ nbr1 / nbr2  }}</strong></p>
+                {% endif %}
+        {% else %}
+            <p>L'operateur n'existe pas.</p>
+        {% endif %} 
+
+    {% else %}
+    <p>{{nbr1}} et/ou {{nbr2}} ne sont pas des nombres.</p>        
+    {% endif %}
+
+{% endblock %}
