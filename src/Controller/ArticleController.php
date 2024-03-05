@@ -26,7 +26,8 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/article/{id}',name:'app_article_id')]
+
+    #[Route('/article/id/{id}',name:'app_article_id', methods:'GET')]
     public function articleById($id) : Response 
     {
         $article = $this->articleRepository->findOneBy(['id' => $id]);
