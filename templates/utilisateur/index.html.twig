@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulaire d'ajout d'utilisateur{% endblock %}
+
+{% block body %}
+    {{form_start(form)}}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.prenom) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.password) }}
+    {{ form_row(form.urlImg) }}
+    <input type="submit" value="Ajouter"/>
+    {{form_end(form)}}
+
+    <p>{{msg}}</p>
+{% endblock %}

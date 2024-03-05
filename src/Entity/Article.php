@@ -7,22 +7,55 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/articles/{id}',
+            requirements: ['id' => '\d+'],
+            normalizationContext: ['groups' => 'article:item']
+        ),
+        new GetCollection(
+            uriTemplate: '/articles',
+            normalizationContext: ['groups' => 'article:list']
+        ),
+        new Post(
+            uriTemplate: '/articles/add',
+            status : 301,
+        ),
+        new Delete(
+            uriTemplate: '/articles/{id}',
+            requirements: ['id' => '\d+'],           
+        ),
+    ],
+    order: ['id' => 'ASC', 'titre' => 'ASC', 'contenu'=>'ASC', 'dateCreation'=>'ASC'],
+    paginationEnabled: true
+)]
 class Article
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['article:list','article:item'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['article:list','article:item'])]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['article:list','article:item', 'utilisateur:list', 'category:list'])]
     private ?string $contenu = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['article:list','article:item'])]
     private ?\DateTimeInterface $dateCreation = null;
 
     #[ORM\ManyToOne]

@@ -5,22 +5,50 @@ namespace App\Entity;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Delete;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            uriTemplate: '/utilisateurs/{id}',
+            requirements: ['id' => '\d+'],
+            normalizationContext: ['groups' => 'utilisateur:item']
+        ),
+        new GetCollection(
+            uriTemplate: '/utilisateurs',
+            normalizationContext: ['groups' => 'utilisateur:list']
+        ),
+        new Post(
+            uriTemplate: 'utilisateurs/add',
+            status : 301,
+        ),
+        new Delete(
+            uriTemplate: '/utilisateurs/{id}',
+            requirements: ['id' => '\d+'],           
+        ),
+    ],
+    order: ['id' => 'ASC', 'nom' => 'ASC', 'prenom'=>'ASC', 'urlImg'=>'ASC'],
+    paginationEnabled: true
+)]
 class Utilisateur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['api'])]
+    #[Groups(['api', 'utilisateur:item', 'utilisateur:list', 'article:list','article:item'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['api'])]
+    #[Groups(['api', 'utilisateur:item', 'utilisateur:list', 'article:list','article:item'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['api'])]
+    #[Groups(['api', 'utilisateur:item', 'utilisateur:list', 'article:list','article:item'])]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 50)]
@@ -30,6 +58,7 @@ class Utilisateur
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['utilisateur:item', 'utilisateur:list', 'article:list','article:item'])]
     private ?string $urlImg = null;
 
     public function getId(): ?int
