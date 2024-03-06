@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulaire d'ajout d'un article{% endblock %}
+
+{% block body %}
+<h1>Ajouter un utilisateur</h1>
+    {{form_start(form)}}
+        {{ form_label(form.titre) }}
+        {{ form_widget(form.titre)}}
+        {{ form_label(form.contenu) }}
+        {{ form_widget(form.contenu)}}
+        <br/>
+        {{ form_label(form.dateCreation) }}
+        {{ form_widget(form.dateCreation)}}
+        <br/>
+        {{ form_label(form.utilisateur) }}
+        {{ form_widget(form.utilisateur)}}
+        <br/>
+        {{ form_label(form.categories) }}
+        {{ form_widget(form.categories)}}
+        <br/>
+        {{ form_label(form.urlImg) }}
+        {{ form_widget(form.urlImg)}}
+        <input type="submit" value="Ajouter"/>
+    {{form_end(form)}}
+
+    <p>{{msg}}</p>
+{% endblock %}
