@@ -8,20 +8,25 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Form\UtilisateurType;
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
+use App\Service\UtilisateurService;
 use App\Service\UtilsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class UtilisateurController extends AbstractController
 {
+    public function __construct(private UtilisateurService $cs){
+        $this->cs = $cs;
+    }
+
     #[Route('/utilisateur/add', name: 'app_utilisateur_add')]
-    public function addUtilisateur(Request $request, EntityManagerInterface $em, UtilisateurRepository $ur): Response{
+    public function addUtilisateur(Request $request, UtilisateurService $us): Response{
 
         $msg = "";
         $utilisateur = new Utilisateur();
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $form->handleRequest($request);
-        $verifyEmail=$ur->findOneBy(['email' => $utilisateur->getEmail()]);
+        //$verifyEmail=$ur->findOneBy(['email' => $utilisateur->getEmail()]);
 
         //Verifier si le formulaire est soumis
         if($form->isSubmitted()){
@@ -35,24 +40,26 @@ class UtilisateurController extends AbstractController
              if($utilisateur->getUrlImg()) {
                  $utilisateur->setUrlImg(UtilsService::cleanInput($utilisateur->getUrlImg()));
              }
-
-            //Verifier si le compte n'existe pas deja avec l'email
-            if(!$verifyEmail){
-
-                $utilisateur->setPassword(md5($utilisateur->getPassword()));
-
-                $em->persist($utilisateur);
-                $em->flush();
-
+             if($us->create($utilisateur)){
                 $msg = "L'utilisateur a bien été ajoutée en BDD";
-
             }else {
-
-                $msg = "Les informations sont incorrectes !";
-
+                $msg = "Enregistrement impossible";
             }
-        }
 
+            // //Verifier si le compte n'existe pas deja avec l'email
+            // if(!$verifyEmail){
+
+            //     $utilisateur->setPassword(md5($utilisateur->getPassword()));
+
+            //     $em->persist($utilisateur);
+            //     $em->flush();
+
+            //     $msg = "L'utilisateur a bien été ajoutée en BDD";
+
+            // }else {
+            //     $msg = "Les informations sont incorrectes !";
+            // }
+        }
         return $this->render('utilisateur/index.html.twig', [
             'form' => $form->createView(), 
             'msg' => $msg,
